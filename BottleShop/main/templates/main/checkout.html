@@ -1,0 +1,147 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+<main class="container my-4" id="cartList">
+	<!-- Featured Products -->
+	<div class="row">
+		<!--Grid column for cart-->
+		<div class="col-md-8">
+			<h3 class="my-4 border-bottom pb-1">Cart ({{totalitems}})</h3>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Product</th>
+						<th>Qty</th>
+						<th>Price</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for product_id,item in cart_data.items %}
+					<tr>
+						<td>
+							<img src="{{item.image}}" width="50" />
+							<p><a href="/product/{{item.title|slugify}}/{{product_id}}">{{item.title}}</a></p>
+						</td>
+						<td>
+							{{item.qty}}
+						</td>
+						<td>$ {{item.price}}</td>
+						<td>$ {% widthratio item.price 1 item.qty %}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2"></td>
+						<th>Total</th>
+						<th>$ {{total_amt}}</th>
+					</tr>
+					{% if totalitems %}
+					<tr>
+						<td colspan="2" align="right">
+							<th>{{form.render}}</th>
+							<th><form action="{% url 'main:create-checkout-session' %}" method="POST">
+                        		{% csrf_token %}
+                        		<button type="submit"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
+								</form>
+							</th>
+						</td>
+<!--						<td colspabb="2" align="left">-->
+<!--						<form action="{% url 'main:create-checkout-session' %}" method="POST">-->
+<!--                        {% csrf_token %}-->
+<!--                        <button type="submit">Checkout</button>-->
+<!--						</td>-->
+	<!--                    </form>-->
+					</tr>
+					{% endif %}
+				</tfoot>
+			</table>
+		</div>
+		<!--End of Grid column for cart-->
+		<!--Grid column for address-->
+		<div class="col-md-4">
+			<h3 class="my-4 border-bottom pb-1">Selected Address</h3>
+			<div class="col-md-12 mb-4">
+            <!--Card-->
+          		<div class="card">
+					<!--Card content Form-->
+					<form method="POST" class="card-body" id="myForm">
+						{% csrf_token %}
+						<!--address-->
+						<div class="md-form mb-5">
+		<!--                <input type="text" id="address" class="form-control" placeholder="1234 Main St">-->
+							<label for="address" class="column-1">Address</label>
+						{{checkoutform.street_address}}
+						</div>
+						<!--End of address-->
+						<!--address-2-->
+						<div class="md-form mb-5">
+		<!--                <input type="text" id="address-2" class="form-control" placeholder="Apartment or suite">-->
+							<label for="address-2" class="column-1">Address 2 (optional)</label>
+						{{checkoutform.apartment_address}}
+						</div>
+						<!--End of address-->
+						<!--Grid row for country and zip-->
+						<div class="row">
+							<!--Grid column for country-->
+							<div class="col-lg-8 col-md-12 mb-4">
+							  <label for="country" class="column-1">Country</label>
+								{{checkoutform.country}}
+							  <div class="invalid-feedback">
+								Please select a valid country.
+							  </div>
+							</div>
+							<!--End of Grid column for conuntry-->
+							<!--Grid column for zip-->
+							<div class="col-lg-4 col-md-6 mb-4">
+							  <label for="zip" class="column-1">Zip</label>
+		<!--                  <input type="text" class="form-control" id="zip" placeholder="" required>-->
+								{{checkoutform.zip}}
+								<div class="invalid-feedback">
+									Zip code required.
+								</div>
+							</div>
+							<!--End of Grid column for zip-->
+						</div>
+						<!--Grid row for country and zip-->
+						<hr>
+						<!--Shipping address same as billing-->
+						<div class="custom-control custom-checkbox">
+							<input {% if form.same_billing_address %} checked {% endif %} type="checkbox" class="custom-control-input" id="same-address">
+							  {{checkoutform.same_billing_address}}
+							<label class="" for="same-address">Shipping address is the same as my billing address</label>
+						</div>
+						<!--End of Shipping address same as billing-->
+						<hr>
+						<!--Payment Option-->
+<!--						<div class="d-block my-3">-->
+<!--							{% for choice in checkoutform.payment_option %}-->
+<!--								<div>-->
+<!--									<span class="radio">{{ choice.tag }}</span>{{ choice.choice_label }}-->
+<!--								</div>-->
+<!--							{% endfor %}-->
+<!--						</div>-->
+						<div class="d-block my-3">
+						  {% for value,text in checkoutform.fields.payment_option.choices %}
+							<div class="custom-control custom-radio">
+							  <input id="{{text}}" name="payment_option" value ="{{text}}"type="radio" class="custom-control-input" required>
+							  <label class="custom-control-label" for="{{text}}">{{text}}</label>
+<!--								{{form.payment_option}}-->
+							</div>
+						  {% endfor %}
+							<hr class="mb-4">
+							<button class="btn btn-primary btn-lg btn-block" id="btn"  href="#" type="submit">Continue to checkout</button>
+						</div>
+						<!--End of Payment Option-->
+					</form>
+					<!--End of Card content Form-->
+          </div>
+            <!--End of Card-->
+        </div>
+		</div>
+		<!--End of Grid column for address-->
+
+	</div>
+</main>
+{% endblock %}

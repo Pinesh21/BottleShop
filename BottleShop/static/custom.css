@@ -1,0 +1,17 @@
+.focused{
+	outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%) !important;
+}
+
+.errorlist li{
+	color: red;
+}
+
+.hidden{
+    display: none;
+}
+
+
+.navbar-nav .nav-item:hover .nav-link {
+    color: blue;
+}

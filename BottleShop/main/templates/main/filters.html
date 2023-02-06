@@ -1,0 +1,92 @@
+{% load static %}
+<!--Just for ref, this is set in template context for all pages to use-->
+{{minMaxPrice}}
+<script type="text/javascript" src="{% static 'product-filter.js' %}"></script>
+			<h3 class="mb-4 border-bottom pb-1">Filters</h3>
+
+<label for="customRange2" class="form-label">Example range</label>
+<!-- Price Filter -->
+			<div class="card mb-4">
+				<h6 class="card-header">Price</h6>
+				<div class="list-group list-group-flush">
+					<li class="list-group-item">
+					<!--value set to have minimum value of bar to begin with to see observe bar with price__max-->
+						<input type="range"
+							   value="{{minMaxPrice.price__min}}"
+							   max={{minMaxPrice.price__max}}
+							   min={{minMaxPrice.price__min}}
+							   id="rangeInput"
+							   oninput="maxPrice.value=this.value" />
+						<!--oninput is to  reflect price slide change into number below, look for id maxPrice-->
+						<p>{{minMaxPrice.price__min}}-{{minMaxPrice.price__max}}</p>
+					</li>
+					<li class="list-group-item">
+						Max: <input type="number"
+									value="{{minMaxPrice.price__min}}"
+									max={{minMaxPrice.price__max}}
+									min={{minMaxPrice.price__min}}
+									class="form-control"
+									id="maxPrice"
+									onkeyup="rangeInput.value=this.value"
+									/>
+						<!--onkeyup is to  reflect price number change into slider look for id rangeOutput-->
+						<button id="priceFilterBtn" class="btn btn-info btn-sm mt-1">Filter</button>
+					</li>
+				</div>
+			</div>
+
+
+<!-- Filter 1 for colors where color_code is shown as button, foreign_key__column is used to refer to obect value-->
+			<div class="card mb-4">
+				<h6 class="card-header">Colors</h6>
+				<div class="list-group list-group-flush">
+					{% for color in colors %}
+					<li class="list-group-item">
+						<input class="filter-checkbox" data-filter="color" value="{{color.color__id}}" type="checkbox" />&nbsp;
+						<button class="btn" style="background-color: {{color.color__color_code}}; margin-top: -5px;"></button>
+					</li>
+					{% endfor %}
+				</div>
+			</div>
+
+
+<!-- Filter 2  for Categories-->
+			{% if SHOW_CATEGORY_FILTERS_FLAG %}
+			<div class="card mb-4">
+				<h6 class="card-header">Categories</h6>
+				<div class="list-group list-group-flush">
+					{% for cat in cats %}
+					<li class="list-group-item">
+						<input class="filter-checkbox" data-filter="category" value="{{cat.category__id}}" type="checkbox" />&nbsp;
+						{{cat.category__title}}
+					</li>
+					{% endfor %}
+				</div>
+			</div>
+			{% endif  %}
+			<!-- Filter 3 for Brands-->
+			{% if SHOW_BRAND_FILTERS_FLAG %}
+			<div class="card mb-4">
+				<h6 class="card-header">Brands</h6>
+				<div class="list-group list-group-flush">
+					{% for brand in brands %}
+					<li class="list-group-item">
+						<input class="filter-checkbox" data-filter="brand" value="{{brand.brand__id}}" type="checkbox" />&nbsp;
+						{{brand.brand__title}}
+					</li>
+					{% endfor %}
+				</div>
+			</div>
+			{% endif %}
+			<!-- Filter 3 for Sizes-->
+			<div class="card mb-4">
+				<h6 class="card-header">Sizes</h6>
+				<div class="list-group list-group-flush">
+					{% for size in sizes %}
+					<li class="list-group-item">
+						<input class="filter-checkbox" data-filter="size" value="{{size.size__id}}" type="checkbox" />&nbsp;
+						{{size.size__title}}
+					</li>
+					{% endfor %}
+				</div>
+			</div>
